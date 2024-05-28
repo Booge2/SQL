@@ -1,0 +1,110 @@
+vlad@DESKTOP-3LV8OG0:~$ redis-cli
+127.0.0.1:6379> set user:name 'John Doe'
+OK
+127.0.0.1:6379> get user:name
+"John Doe"
+127.0.0.1:6379> rpush user:fruits 'apple' banana' 'orange'
+Invalid argument(s)
+127.0.0.1:6379> rpush user:fruits 'apple' 'banana' 'orange'
+(integer) 3
+127.0.0.1:6379> lrange user:fruits
+(error) ERR wrong number of arguments for 'lrange' command
+127.0.0.1:6379> lrange user:fruits 0 -1
+1) "apple"
+2) "banana"
+3) "orange"
+127.0.0.1:6379> hmset user:1 'name' 'Alice' 'age' '25'
+OK
+127.0.0.1:6379> hgetall user:1
+1) "name"
+2) "Alice"
+3) "age"
+4) "25"
+127.0.0.1:6379> sadd user:tads 'red' 'green' 'blue'
+(integer) 3
+127.0.0.1:6379> incr user:counter
+(integer) 1
+127.0.0.1:6379> get user:counter
+"1"
+127.0.0.1:6379> del user:1 'name'
+(integer) 1
+127.0.0.1:6379> exists user:1 'name'
+(integer) 0
+127.0.0.1:6379> setex user:1 'message' 'Hello world' 60
+(error) ERR wrong number of arguments for 'setex' command
+127.0.0.1:6379> setex user:message 'Hello world' 60
+(error) ERR value is not an integer or out of range
+127.0.0.1:6379> setex user:message 60 'Hello world'
+OK
+127.0.0.1:6379> flushall
+OK
+127.0.0.1:6379> get user:name
+(nil)
+127.0.0.1:6379> geoadd user:geo_location 46.8023333,1.6491053,13 Shatoru Frans
+(error) ERR value is not a valid float
+127.0.0.1:6379> geoadd user:geo_location 46.8023333,1.6491053 Shatoru Frans
+(error) ERR value is not a valid float
+127.0.0.1:6379> geoadd user:geo_location 46.8023333,1.6491053 'Shatoru Frans'
+(error) ERR wrong number of arguments for 'geoadd' command
+127.0.0.1:6379> geoadd geo_location 46.8023333,1.6491053 'Shatoru Frans'
+(error) ERR wrong number of arguments for 'geoadd' command
+127.0.0.1:6379> GEOADD places 13.361389 38.115556 "Palermo"
+(integer) 1
+127.0.0.1:6379> GEOADD geo_location 13.361389 38.115556 "Palermo"
+(integer) 1
+127.0.0.1:6379> GEOADD geo_location 15.087269 37.502669 "Catania"
+(integer) 1
+127.0.0.1:6379> GEOADD geo_location 12.0 34.0 "NewPlace"
+(integer) 1
+127.0.0.1:6379> geodist geo_locations London Kyiv
+(nil)
+127.0.0.1:6379> geodist geo_locations Palermo Catania
+(nil)
+127.0.0.1:6379> geodist geo_locations Palermo Catania km
+(nil)
+127.0.0.1:6379> hmset students "Alice" 4.5
+OK
+127.0.0.1:6379> hmset students "Bob" 3.7
+OK
+127.0.0.1:6379> hmset students 'Charlie' 4.2
+OK
+127.0.0.1:6379> hgetall students
+1) "Alice"
+2) "4.5"
+3) "Bob"
+4) "3.7"
+5) "Charlie"
+6) "4.2"
+127.0.0.1:6379> hmset students "Bob" 3.9
+OK
+127.0.0.1:6379> hgetall students
+1) "Alice"
+2) "4.5"
+3) "Bob"
+4) "3.9"
+5) "Charlie"
+6) "4.2"
+127.0.0.1:6379> PFADD unique_users user1
+(integer) 1
+127.0.0.1:6379> PFADD unique_users user2
+(integer) 1
+127.0.0.1:6379> PFADD unique_users user3
+(integer) 1
+127.0.0.1:6379>  PFCOUNT unique_users
+(integer) 3
+127.0.0.1:6379> MULTI
+OK
+127.0.0.1:6379> LPUSH mylist "element1"
+QUEUED
+127.0.0.1:6379> LPUSH mylist "element2"
+QUEUED
+127.0.0.1:6379> HSET myhash field1 "value1"
+QUEUED
+127.0.0.1:6379> HSET myhash field1 "value2"
+QUEUED
+127.0.0.1:6379> EXEC
+1) (integer) 1
+2) (integer) 2
+3) (integer) 1
+4) (integer) 0
+127.0.0.1:6379>
