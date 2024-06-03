@@ -1,0 +1,131 @@
+vlad@DESKTOP-3LV8OG0:~$ redis-cli
+127.0.0.1:6379> SET username "Владислав"
+OK
+127.0.0.1:6379> LPUSH todo_list "Поготува  ти обід""Вивчити Redis"
+Invalid argument(s)
+127.0.0.1:6379> LPUSH todo_list "Поготува  ти обід"
+(integer) 1
+127.0.0.1:6379> LPUSH todo_list "Вивчити Redis"
+(integer) 2
+127.0.0.1:6379> LRANGE todo_list 0 -1
+1) "\xd0\x92\xd0\xb8\xd0\xb2\xd1\x87\xd0\xb8\xd1\x82\xd0\xb8 Redis"
+2) "\xd0\x9f\xd0\xbe\xd0\xb3\xd0\xbe\xd1\x82\xd1\x83\xd0\xb2\xd0\xb0  \xd1\x82\xd0\xb8 \xd0\xbe\xd0\xb1\xd1\x96\xd0\xb4"
+127.0.0.1:6379> HSET user_data age "25"
+(integer) 1
+127.0.0.1:6379> HSET user_data country "Україна"
+(integer) 1
+127.0.0.1:6379> HGETALL user_data
+1) "age"
+2) "25"
+3) "country"
+4) "\xd0\xa3\xd0\xba\xd1\x80\xd0\xb0\xd1\x97\xd0\xbd\xd0\xb0"
+127.0.0.1:6379> SADD tags "programming"
+(integer) 1
+127.0.0.1:6379> SADD tags "redis" "tutorial"
+(integer) 2
+127.0.0.1:6379> SMEMBERS tags
+1) "tutorial"
+2) "redis"
+3) "programming"
+127.0.0.1:6379> INCRBY page_views 5
+(integer) 5
+127.0.0.1:6379> GET page_views
+"5"
+127.0.0.1:6379> SET session_token "abc123"
+OK
+127.0.0.1:6379> EXPIRE session_token 120
+(integer) 1
+127.0.0.1:6379> DEL username
+(integer) 1
+127.0.0.1:6379> EXISTS username
+(integer) 0
+127.0.0.1:6379> SET user:1:name "Владислав"
+OK
+127.0.0.1:6379> KEYS user:*
+1) "user:name"
+2) "user:1:name"
+127.0.0.1:6379> SETBIT online_status 0 1
+(integer) 0
+127.0.0.1:6379> GETBIT online_status 0
+(integer) 1
+127.0.0.1:6379> MULTI
+OK
+127.0.0.1:6379> SET balance 1000
+QUEUED
+127.0.0.1:6379> GET balance
+QUEUED
+127.0.0.1:6379> EXEC
+1) OK
+2) "1000"
+127.0.0.1:6379> RPUSH cache:popular_articles 1 2 3 4 5
+(integer) 5
+127.0.0.1:6379> LRANGE cache:popular_articles 0 -1
+1) "1"
+2) "2"
+3) "3"
+4) "4"
+5) "5"
+127.0.0.1:6379> SADD set1 "a" "b" "c"
+(integer) 3
+127.0.0.1:6379> SADD set2 "b" "c" "d"
+(integer) 3
+127.0.0.1:6379> SUNIONSTORE union_set set1 set2
+(integer) 4
+127.0.0.1:6379> SMEMBERS union_set
+1) "c"
+2) "a"
+3) "b"
+4) "d"
+127.0.0.1:6379> SINTERSTORE intersection_set set1 set2
+(integer) 2
+127.0.0.1:6379> SMEMBERS intersection_set
+1) "c"
+2) "b"
+127.0.0.1:6379> SUBSCRIBE messages
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "messages"
+3) (integer) 1
+^C
+vlad@DESKTOP-3LV8OG0:~$ redis-cli
+127.0.0.1:6379> GEOADD locations 30.2672 -97.7431 "Austin"
+(error) ERR invalid longitude,latitude pair 30.267200,-97.743100
+127.0.0.1:6379> GEOADD locations 30.3079541, -97.9205508 "Austin"
+(error) ERR value is not a valid float
+127.0.0.1:6379> GEOADD locations 30.3079541 -97.9205508 "Austin"
+(error) ERR invalid longitude,latitude pair 30.307954,-97.920551
+127.0.0.1:6379> GEOADD locations 49.2347412 28.3137487 'Vinnitsa'
+(integer) 1
+127.0.0.1:6379> GEOADD locations 50.2678919 28.5178327 'Zhutomyr'
+(integer) 1
+127.0.0.1:6379> GEOPOS locations 'Vinnitsa' 'Zhutomyr'
+1) 1) "49.23473864793777466"
+   2) "28.31374911679402118"
+2) 1) "50.26789337396621704"
+   2) "28.51783219093820065"
+127.0.0.1:6379> RPUSH tasks "Task 1" "Task 2" "Task 3"
+(integer) 3
+127.0.0.1:6379> LRANGE tasks 0 -1
+1) "Task 1"
+2) "Task 2"
+3) "Task 3"
+127.0.0.1:6379> RPUSH tasks "Task 4"
+(integer) 4
+127.0.0.1:6379> LPOP tasks
+"Task 1"
+127.0.0.1:6379> LRANGE tasks 0 -1
+1) "Task 2"
+2) "Task 3"
+3) "Task 4"
+127.0.0.1:6379> PFADD unique_users user1 user2 user3 user4 user5
+(integer) 1
+127.0.0.1:6379> PFCOUNT unique_users
+(integer) 5
+127.0.0.1:6379> RPUSH message_queue "Message 1" "Message 2" "Message 3"
+(integer) 3
+127.0.0.1:6379> LRANGE message_queue 0 -1
+1) "Message 1"
+2) "Message 2"
+3) "Message 3"
+127.0.0.1:6379> shutdown
+not connected>
